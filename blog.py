@@ -8,8 +8,12 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 @app.route("/")
-def startingPage():
-	return render_template("StartingPage.html")
+def LoginPage():
+	return render_template("LoginPage.html")
+
+@app.route("/MainPage")
+def MainPage():
+	return render_template("MainPage.html")
 
 if __name__ == "__main__":
 	app.debug = True
