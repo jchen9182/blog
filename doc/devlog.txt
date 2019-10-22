@@ -12,8 +12,8 @@ v 0.1 (Updated 10.21.19)
 HOW WE WILL USE JOIN:
 
   - We could use inner join to attribute blog titles to authors when displayed on the main hub page
-  - something about left join
-  - something about cross join
+  - We could use left join to get a list of users and their blogs (NULL if user hasn't made one)
+  - We could use cross join to combine our data tables into a single set for further processing if necessary
 
 --------------------------------------------------------------------------------
 
@@ -21,4 +21,4 @@ RESPONSE TO THE READING:
 
   - As it seems that many parts of code are held together by "a thread" so to speak, we could use extensive comments to help ourselves and others fix the code more easily should it break
   - Everybody has their own way of doing things, so we should just trust each other to complete their own parts.
-  - 
+  - Ultimately, we need to be familiar with the code and the standards involved in it to be able to contribute. Thus, communication is key.
