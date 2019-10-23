@@ -27,3 +27,10 @@ RESPONSE TO THE READING:
 
 jasonZ -- 2019-10-20 22:34
 Added initial flask page
+
+-------------------------------------------------------------------------------
+
+jasonZ -- 2019-10-23 14:52
+Added most of the routes and html files with Calvin Chu
+
+-------------------------------------------------------------------------------
