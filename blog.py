@@ -5,6 +5,16 @@
 # 2019-10-28
 
 from flask import Flask, render_template, request
+import sqlite3
+
+#-----------------------------------------------------------------
+#DATABASE SETUP
+DB_FILE = "Info.db"
+db = sqlite3.connect(DB_FILE)
+c = db.cursor()
+
+#-----------------------------------------------------------------
+#FLASK APP 
 app = Flask(__name__)
 
 @app.route("/")
@@ -17,6 +27,7 @@ def Main():
 
 @app.route("/Register")
 def Register():
+    #flash("Account created")
 	return render_template("RegisterPage.html")
 
 @app.route("/Profile")

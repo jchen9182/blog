@@ -2,6 +2,9 @@
 {% block title %} Login Page {% endblock %}
 {% block body %}
 <h1> Login Page </h1>
+{% for message in get_flashed_messages() %}
+{{ message }}<br>
+{% endfor %}
     <form action = "/Main">
       Username:<br>
       <input type="text" name="username"><br>
