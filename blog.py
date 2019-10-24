@@ -12,9 +12,15 @@ import sqlite3
 DB_FILE = "Info.db"
 db = sqlite3.connect(DB_FILE)
 c = db.cursor()
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='userdata' ''')
+if c.fetchone()[0] < 1:
+    c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='blogdata' ''')
+if c.fetchone()[0] < 1:
+    c.execute("CREATE TABLE blogdata(user TEXT,blogid INT, title TEXT,content BLOB);")  
 
 #-----------------------------------------------------------------
-#FLASK APP 
+#FLASK APP
 app = Flask(__name__)
 
 @app.route("/")
