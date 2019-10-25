@@ -17,14 +17,19 @@ if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='blogdata' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE blogdata(user TEXT,blogid INT, title TEXT,content BLOB);")  
+    c.execute("CREATE TABLE blogdata(user TEXT,blogid INT, title TEXT,content BLOB);")
 
 #-----------------------------------------------------------------
 #FLASK APP
 app = Flask(__name__)
+app.secret_key = os.urandom(32)
 
 @app.route("/")
 def Login():
+    if("username" in session and "password" in session):
+        user = session['username']
+        pass = session['password']
+        c.execute()
 	return render_template("LoginPage.html")
 
 @app.route("/Main")
@@ -47,6 +52,9 @@ def CreateBlog():
 @app.route("/MyBlogs")
 def MyBlogs():
 	return render_template("MyBlogsPage.html")
+
+db.commit()
+db.close()
 
 if __name__ == "__main__":
 	app.debug = True
