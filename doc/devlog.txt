@@ -30,6 +30,10 @@ Added initial flask page
 
 -------------------------------------------------------------------------------
 
+chuC -- 2019-10-23 14:32
+Added preliminary HTML templates
+
+-------------------------------------------------------------------------------
 jasonZ -- 2019-10-23 14:52
 Added most of the routes and html files with Calvin Chu
 
@@ -37,3 +41,10 @@ Added most of the routes and html files with Calvin Chu
 
 leungD -- 2019-10-24 14:36
 Started working on the database creation and added flash message basics
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-25 19:05
+Fleshed out the README.md and added the requirements to it
+
+-------------------------------------------------------------------------------
