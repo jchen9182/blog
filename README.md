@@ -16,3 +16,18 @@
 - Person will write a Python application to create appropriate databases and tables, making sure to only add them if they don’t already exist
 - Person will facilitate adding to, editing contents in, and potentially removing from tables 
 
+----------------------------------
+## How to Run
+- Install Python3 and Flask if you have not done so already.
+- Clone the reopsitory and cd into it:
+```console
+  $ git clone git@github.com:CalfinChoo/blog.git
+```
+```console
+  $ cd blog
+```
+- Run the following command:
+```console
+  $ python app.py
+```
+- View the webpage in your browser at URL: http://127.0.0.1:5000/
