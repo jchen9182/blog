@@ -26,6 +26,7 @@ if c.fetchone()[0] < 1:
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 passcheck = "Type in your password"
+message = ""
 
 @app.route("/", methods=['GET', 'POST'])
 def Login():
@@ -41,19 +42,35 @@ def Main():
 
 @app.route("/Register", methods=['GET', 'POST'])
 def Register():
+    global message
+    if (message != ""):
+        temp = message
+        message = ""
+        return render_template("RegisterPage.html", m = temp)
     return render_template("RegisterPage.html")
 
 @app.route("/Registered", methods= ['GET', 'POST'])
 def Registered():
-    with sqlite3.connect("DB_FILE") as db:
-        c = db.cursor()
-        if (request.args["password"] == request.args["repeat"]):
-            if type(c.fetchone()) is none:
-                c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
-            c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
-            return redirect("/")
-            
+    global message
+    with sqlite3.connect(DB_FILE) as db:
+        if (len(request.args["username"]) > 0):
+            c = db.cursor()
+            c.execute('SELECT * FROM userdata WHERE user = (?)', (request.args["username"],))
+            if (len(c.fetchall()) > 0) :
+                message = "Username already exists."
+                return redirect("/Register")
+            if (len(request.args["password"]) == 0):
+                message = "Password is empty."
+                return redirect("/Register")
+            if (request.args["password"] == request.args["repeat"]):
+                c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
+                return redirect("/")
+            else:
+                message = "Passwords do not match."
+                return redirect("/Register")
+        message = "Username not filled out."
         return redirect("/Register")
+
 
 
 

@@ -3,6 +3,9 @@
 {% block body %}
 
 <h1> Register Page </h1>
+  {% if m %}
+  <p1>&#9888; {{m}}</p1>
+  {% endif %}
   <form action = "/Registered" method = "GET">
     Username:<br>
     <input type="text" name="username"><br>
