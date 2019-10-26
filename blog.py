@@ -25,7 +25,7 @@ if c.fetchone()[0] < 1:
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
-
+passcheck = "Type in your password"
 
 @app.route("/", methods=['GET', 'POST'])
 def Login():
@@ -43,9 +43,11 @@ def Main():
 def Register():
     return render_template("RegisterPage.html")
 
-@app.route("/Registered")
+@app.route("/Registered", methods= ['GET', 'POST'])
 def Registered():
-	return redirect("/")
+        if (request.args["password"] == request.args["repeat"]):
+            return redirect("/")
+        return redirect("/Register")
 
 
 
