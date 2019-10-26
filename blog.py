@@ -25,7 +25,8 @@ if c.fetchone()[0] < 1:
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
-passcheck = "Type in your password"
+passcheck = ["Type in your password", "Your passwords repeat"]
+passer = 0
 
 @app.route("/", methods=['GET', 'POST'])
 def Login():
@@ -41,7 +42,7 @@ def Main():
 
 @app.route("/Register", methods=['GET', 'POST'])
 def Register():
-    return render_template("RegisterPage.html")
+    return render_template("RegisterPage.html", checker=passcheck[passer % 2])
 
 @app.route("/Registered", methods= ['GET', 'POST'])
 def Registered():
@@ -52,6 +53,8 @@ def Registered():
                 c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
             c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
             return redirect("/")
+        global passer
+        passer += 1
 
         return redirect("/Register")
 
@@ -72,9 +75,9 @@ def MyBlogs():
 
 command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string
 c.execute(command)
-print(555555555555555555554444444444)
+#print(555555555555555555554444444444)
 print(c.fetchall())
-print(44444444445555555555555)
+#print(44444444445555555555555)
 db.commit()
 db.close()
 
