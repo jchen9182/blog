@@ -25,16 +25,34 @@ if c.fetchone()[0] < 1:
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
+<<<<<<< HEAD
 passcheck = "Type in your password"
 message = ""
+=======
+passcheck = ["Type in your password", "Your passwords repeat"]
+passer = 0
+loggedin = False
+>>>>>>> 1648acc2dac7e9ec7d8ae2ead555831d0926abe9
 
 @app.route("/", methods=['GET', 'POST'])
 def Login():
     if("username" in session and "password" in session):
-        #user = session['username']
-        #pas = session['password']
+        user = session['username']
+        pas = session['password']
         c.execute()
     return render_template("LoginPage.html")
+
+##check if the user entered a valid combo of username and passwor
+@app.route("/loginhelper", methods=['GET', 'POST'])
+def helper():
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        c.execute("SELECT * FROM userdata")
+        valid = c.fetchall()
+        if (request.args["username"], request.args["password"]) in valid:
+            return redirect("/Main")
+        return redirect("/")
+
 
 @app.route("/Main")
 def Main():
@@ -42,15 +60,23 @@ def Main():
 
 @app.route("/Register", methods=['GET', 'POST'])
 def Register():
+<<<<<<< HEAD
     global message
     if (message != ""):
         temp = message
         message = ""
         return render_template("RegisterPage.html", m = temp)
     return render_template("RegisterPage.html")
+=======
+    return render_template("RegisterPage.html", checker=passcheck[passer % 2])
+>>>>>>> 1648acc2dac7e9ec7d8ae2ead555831d0926abe9
 
+
+##Below is a checker
+##If you register, it checs the following
 @app.route("/Registered", methods= ['GET', 'POST'])
 def Registered():
+<<<<<<< HEAD
     global message
     with sqlite3.connect(DB_FILE) as db:
         if (len(request.args["username"]) > 0):
@@ -69,6 +95,24 @@ def Registered():
                 message = "Passwords do not match."
                 return redirect("/Register")
         message = "Username not filled out."
+=======
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        if (request.args["password"] == request.args["repeat"]):
+            #first, if u repeat ur passwoard
+            if type(c.fetchone()) is None:
+                #(if there are no accounts itll make a table)
+                c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
+            #otherwise itll add ur username and password to the database for you to login
+            c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
+            return redirect("/")
+            #then you go back to the login page
+        #if you didnt return, that means you didnt have equal passwords
+        #so the following will help show that
+        global passer
+        passer += 1
+
+>>>>>>> 1648acc2dac7e9ec7d8ae2ead555831d0926abe9
         return redirect("/Register")
 
 
@@ -86,6 +130,12 @@ def CreateBlog():
 def MyBlogs():
 	return render_template("MyBlogsPage.html")
 
+
+command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string
+c.execute(command)
+#print(555555555555555555554444444444)
+print(c.fetchall())
+#print(44444444445555555555555)
 db.commit()
 db.close()
 
