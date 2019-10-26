@@ -45,8 +45,14 @@ def Register():
 
 @app.route("/Registered", methods= ['GET', 'POST'])
 def Registered():
+    with sqlite3.connect("DB_FILE") as db:
+        c = db.cursor()
         if (request.args["password"] == request.args["repeat"]):
+            if type(c.fetchone()) is none:
+                c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
+            c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
             return redirect("/")
+            
         return redirect("/Register")
 
 
