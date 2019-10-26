@@ -27,14 +27,27 @@ app = Flask(__name__)
 app.secret_key = os.urandom(32)
 passcheck = ["Type in your password", "Your passwords repeat"]
 passer = 0
+loggedin = False
 
 @app.route("/", methods=['GET', 'POST'])
 def Login():
     if("username" in session and "password" in session):
-        #user = session['username']
-        #pas = session['password']
+        user = session['username']
+        pas = session['password']
         c.execute()
     return render_template("LoginPage.html")
+
+##check if the user entered a valid combo of username and passwor
+@app.route("/loginhelper", methods=['GET', 'POST'])
+def helper():
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        c.execute("SELECT * FROM userdata")
+        valid = c.fetchall()
+        if (request.args["username"], request.args["password"]) in valid:
+            return redirect("/Main")
+        return redirect("/")
+
 
 @app.route("/Main")
 def Main():
@@ -44,15 +57,24 @@ def Main():
 def Register():
     return render_template("RegisterPage.html", checker=passcheck[passer % 2])
 
+
+##Below is a checker
+##If you register, it checs the following
 @app.route("/Registered", methods= ['GET', 'POST'])
 def Registered():
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         if (request.args["password"] == request.args["repeat"]):
+            #first, if u repeat ur passwoard
             if type(c.fetchone()) is None:
+                #(if there are no accounts itll make a table)
                 c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
+            #otherwise itll add ur username and password to the database for you to login
             c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
             return redirect("/")
+            #then you go back to the login page
+        #if you didnt return, that means you didnt have equal passwords
+        #so the following will help show that
         global passer
         passer += 1
 
