@@ -4,8 +4,9 @@
 # P#00 Da Art of Storytellin'
 # 2019-10-28
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, url_for, redirect
 import sqlite3
+import os
 
 #-----------------------------------------------------------------
 #DATABASE SETUP
@@ -21,25 +22,32 @@ if c.fetchone()[0] < 1:
 
 #-----------------------------------------------------------------
 #FLASK APP
+
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
-@app.route("/")
+
+@app.route("/", methods=['GET', 'POST'])
 def Login():
     if("username" in session and "password" in session):
-        user = session['username']
-        pass = session['password']
+        #user = session['username']
+        #pas = session['password']
         c.execute()
-	return render_template("LoginPage.html")
+    return render_template("LoginPage.html")
 
 @app.route("/Main")
 def Main():
 	return render_template("MainPage.html")
 
-@app.route("/Register")
+@app.route("/Register", methods=['GET', 'POST'])
 def Register():
-    #flash("Account created")
-	return render_template("RegisterPage.html")
+    return render_template("RegisterPage.html")
+
+@app.route("/Registered")
+def Registered():
+	return redirect("/")
+
+
 
 @app.route("/Profile")
 def Profile():
