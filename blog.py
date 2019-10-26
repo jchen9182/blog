@@ -45,14 +45,14 @@ def Register():
 
 @app.route("/Registered", methods= ['GET', 'POST'])
 def Registered():
-    with sqlite3.connect("DB_FILE") as db:
+    with sqlite3.connect("info.db") as db:
         c = db.cursor()
         if (request.args["password"] == request.args["repeat"]):
-            if type(c.fetchone()) is none:
+            if type(c.fetchone()) is None:
                 c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
             c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
             return redirect("/")
-            
+
         return redirect("/Register")
 
 
@@ -69,6 +69,12 @@ def CreateBlog():
 def MyBlogs():
 	return render_template("MyBlogsPage.html")
 
+
+command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string
+c.execute(command)
+print(555555555555555555554444444444)
+print(c.fetchall())
+print(44444444445555555555555)
 db.commit()
 db.close()
 
