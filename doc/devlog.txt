@@ -29,6 +29,10 @@ jasonZ -- 2019-10-20 22:34
 Added initial flask page
 
 -------------------------------------------------------------------------------
+rizzoJ -- 2019-10-22 14:20
+Made and finished new and finalized map pdf
+
+-------------------------------------------------------------------------------
 
 chuC -- 2019-10-23 14:32
 Added preliminary HTML templates
@@ -46,5 +50,23 @@ Started working on the database creation and added flash message basics
 
 chuC -- 2019-10-25 19:05
 Fleshed out the README.md and added the requirements to it
+
+-------------------------------------------------------------------------------
+rizzoJ -- 2019-10-26 1:11
+Added a registering mechanism and fixed some database kinks, now the userdata table is fleshed out
+
+--------------------------------------------------------------------------------
+
+rizzoJ -- 2019-10-26 15:50
+Made the password form catch errors with not entering or having unequal passwords, then linked the login mechanism to the registering tables
+
+-------------------------------------------------------------------------------
+
+rizzoJ -- 2019-10-27 12:09
+Created a new html file for editing existing blogs
+
+-------------------------------------------------------------------------------
+rizzoJ -- 2019-10-27 4:49
+Editing blogs is fully functional in the database, functionality of the web app is finished
 
 -------------------------------------------------------------------------------
