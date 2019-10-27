@@ -2,4 +2,8 @@
 {% block title %} Main Page {% endblock %}
 {% block body %}
 <h1> Blog Page </h1>
+{% if b %}
+<h2> Title : {{b[2]}} </h2>
+<p> {{b[3]}} </p>
+{% endif %}
 {% endblock %}

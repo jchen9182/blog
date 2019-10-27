@@ -2,10 +2,14 @@
 {% block title %} Main Page {% endblock %}
 {% block body %}
 <h1> Profile Page </h1>
-  <form action = "/Main">
-    <input type="submit" value="Back">
-  </form>
+  <p><b>Username: </b>{{user}}</p>
   <form action = "/CreateBlog">
-    <input type="submit" value="+">
+    <input type="submit" value="Create New Blog">
+  </form>
+  <form action = "/MyBlogs">
+    <input type="submit" value="View My Blogs">
+  </form>
+  <form action = "/Main">
+    <input type="submit" value="Home">
   </form>
 {% endblock %}

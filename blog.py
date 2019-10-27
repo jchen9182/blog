@@ -18,7 +18,7 @@ if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='blogdata' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE blogdata(user TEXT,blogid INT, title TEXT,content BLOB);")
+    c.execute("CREATE TABLE blogdata(user TEXT, blogid INT, title TEXT,content BLOB);")
 
 #-----------------------------------------------------------------
 #FLASK APP
@@ -27,6 +27,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(32)
 message = ""
 loggedin = False
+lastRoute = "/"
 
 def rend_temp(template, mess):
     global message
@@ -37,18 +38,25 @@ def rend_temp(template, mess):
 
 @app.route("/", methods=['GET', 'POST'])
 def Login():
-    with sqlite3.connect("info.db") as db:
-        c = db.cursor()
-        c.execute("SELECT * FROM userdata")
-        valid = c.fetchall()
-    if("username" in session and "password" in session):
-        if (session["username"], session["password"]) in valid:
-            return redirect("/Main")
-    return render_template("LoginPage.html")
+    global lastRoute
+    global loggedin
+    loggedin = False
+    lastRoute = "/"
+    # with sqlite3.connect("info.db") as db:
+    #     c = db.cursor()
+    #     c.execute("SELECT * FROM userdata")
+    #     valid = c.fetchall()
+    # if("username" in session and "password" in session):
+    #     if (session["username"], session["password"]) in valid:
+    #         return redirect("/Main")
+    return rend_temp("LoginPage.html", message)
 
 ##check if the user entered a valid combo of username and passwor
-@app.route("/loginhelper", methods=['GET', 'POST'])
+@app.route("/loginHelper", methods=['GET', 'POST'])
 def helper():
+    global message
+    global loggedin
+    if (len(request.args) == 0): return redirect(lastRoute)
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         c.execute("SELECT * FROM userdata")
@@ -56,41 +64,62 @@ def helper():
         if (request.args["username"], request.args["password"]) in valid:
             session["username"] = request.args["username"]
             session["password"] = request.args["password"]
+            loggedin = True
             return redirect("/Main")
-        if (session["username"], session["password"]) in valid:
-            return redirect("/Main")
+        # if (session["username"], session["password"]) in valid:
+        #     return redirect("/Main")
+        message = "Username or password incorrect."
         return redirect("/")
 
 
 @app.route("/Main")
 def Main():
+    global lastRoute
+    if (not loggedin): return redirect(lastRoute)
+    lastRoute = "/Main"
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         c.execute("SELECT * FROM blogdata")
         allblogs = c.fetchall()
-        return render_template("MainPage.html",smth = allblogs)
+        url = {}
+        for entry in allblogs:
+            url[entry[1]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[1])
+        return render_template("MainPage.html", smth = allblogs, u = url)
 
 @app.route("/Register", methods=['GET', 'POST'])
 def Register():
+    global lastRoute
+    lastRoute = "/Register"
     return rend_temp("RegisterPage.html", message)
 
+@app.route("/Blog")
+def Blog():
+    global lastRoute
+    if (not loggedin): return redirect(lastRoute)
+    lastRoute = "/Blog?id=" + request.args["id"]
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        c.execute("SELECT * FROM blogdata WHERE blogid = (?)", (request.args["id"],))
+        blog = c.fetchone()
+        return render_template("BlogPage.html", b = blog)
 
 ##Below is a checker
 ##If you register, it checs the following
-@app.route("/Registered", methods= ['GET', 'POST'])
+@app.route("/registerHelper", methods= ['GET', 'POST'])
 def Registered():
     global message
+    if (len(request.args) == 0): return redirect(lastRoute)
     with sqlite3.connect(DB_FILE) as db:
         if (len(request.args["username"]) > 0):
             c = db.cursor()
-            c.execute('SELECT * FROM userdata WHERE user = (?)', (request.args["username"],))
-            if (len(c.fetchall()) > 0) :
-                message = "Username already exists."
-                return redirect("/Register")
             if (len(request.args["password"]) == 0):
                 message = "Password is empty."
                 return redirect("/Register")
             if (request.args["password"] == request.args["repeat"]):
+                c.execute('SELECT * FROM userdata WHERE user = (?)', (request.args["username"],))
+                if (len(c.fetchall()) > 0) :
+                    message = "Username already exists."
+                    return redirect("/Register")
                 c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
                 message = "Account Created!"
                 return redirect("/")
@@ -113,20 +142,37 @@ def Registered():
         # #so the following will help show that
         # return redirect("/Register")
 
-
-
-
 @app.route("/Profile")
 def Profile():
-	return render_template("ProfilePage.html")
+    if (not loggedin): return redirect(lastRoute)
+    return render_template("ProfilePage.html", user = session["username"])
 
 @app.route("/CreateBlog")
 def CreateBlog():
-	return render_template("CreateBlogPage.html")
+    if (not loggedin): return redirect(lastRoute)
+    return render_template("CreateBlogPage.html")
+
+@app.route("/createHelper")
+def cbHelper():
+    global message
+    if (len(request.args) == 0): return redirect(lastRoute)
+    with sqlite3.connect(DB_FILE) as db:
+        c = db.cursor()
+        rows = c.execute('SELECT COUNT(*) FROM blogdata').fetchone()[0]
+        c.execute('''INSERT INTO blogdata VALUES (?, ?, ?, ?)''', (session["username"], rows, "" + request.args["title"], "" + request.args["body"]))
+        return redirect("/Main")
 
 @app.route("/MyBlogs")
 def MyBlogs():
-	    return render_template("MyBlogsPage.html")
+    global lastRoute
+    if (not loggedin): return redirect(lastRoute)
+    lastRoute = "/MyBlogs"
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        print(session["username"])
+        c.execute('''SELECT * FROM blogdata WHERE user = (?)''', (session["username"],))
+        myBlogs = c.fetchall()
+        return render_template("MyBlogsPage.html", mb = myBlogs)
 
 
 command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string

@@ -2,10 +2,10 @@
 {% block title %} Login Page {% endblock %}
 {% block body %}
 <h1> Login Page </h1>
-{% for message in get_flashed_messages() %}
-{{ message }}<br>
-{% endfor %}
-    <form action = "/loginhelper">
+{% if m %}
+<h5>&#9888; {{m}}</h5>
+{% endif %}
+    <form action = "/loginHelper">
       Username:<br>
       <input type="text" name="username"><br>
       Password:<br>
