@@ -1,17 +1,9 @@
 {% extends "base.html" %}
-{% block title %} Create Blog {% endblock %}
+{% block title %} Edit Blog {% endblock %}
 {% block body %}
 {% if m %}
 
-<script language="javascript" type="text/javascript">
-function addtext() {
-	var newtext = document.myform.inputtext.value;
-	if (document.myform.placement[1].checked) {
-		document.myform.outputtext.value = "";
-		}
-	document.myform.outputtext.value += newtext;
-}
-</script>
+
 
 <h5>&#9888; {{m}}</h5>
 {% endif %}

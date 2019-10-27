@@ -29,8 +29,6 @@ app.secret_key = os.urandom(32)
 message = ""
 loggedin = False
 lastRoute = "/"
-editor = ""
-title = ""
 editID = -1
 
 def rend_temp(template, mess):
@@ -104,8 +102,11 @@ def Register():
 @app.route("/Blog")
 def Blog():
     global lastRoute
+    global editID
     if (not loggedin): return redirect(lastRoute)
     lastRoute = "/Blog?id=" + request.args["id"]
+    editID = int(request.args["id"])
+    print(editID)
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         c.execute("SELECT * FROM blogdata WHERE blogid = (?)", (request.args["id"],))
@@ -188,14 +189,24 @@ def MyBlogs():
             url[entry[1]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[1])
         return render_template("MyBlogsPage.html", mb = myBlogs, u = url)
 
-@app.route("/EditBlog")
+@app.route("/EditBlog", methods = ["GET"])
 def edit():
+    global editID
     global lastRoute
-    return render_template("EditBlog.html", title = "Temporary", body = "Tester")
-    # with sqlite3.connect("info.db") as db:
-    #     c = db.cursor()
-    #     c.execute('''SELECT * FROM blogdata WHERE user = (?) AND blogid = (?)''', (session["username"], editID))
-    #     print(c.fetchall())
+    if (editID < 0): return redirect(lastRoute)
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        print(11111111)
+        gang = c.execute('''SELECT * FROM blogdata WHERE user = (?) and blogid = (?)''', (session["username"], str(editID)))
+        #print(111111111111)
+        Title = ""
+        Body = ""
+        for theans in gang:
+            title = theans[2]
+            Body = theans[3]
+        #data[3] is the actual body of the blog
+    return render_template("EditBlog.html", title = Title, body = Body)
+
 
 
 
