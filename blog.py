@@ -202,10 +202,24 @@ def edit():
         Title = ""
         Body = ""
         for theans in gang:
-            title = theans[2]
+            Title = theans[2]
             Body = theans[3]
         #data[3] is the actual body of the blog
     return render_template("EditBlog.html", title = Title, body = Body)
+
+
+
+@app.route("/EditHelper")
+def update():
+    global editID
+    if (editID < 0): return redirect(lastRoute)
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', str(editID))
+        print(c.fetchall())
+        c.execute('''INSERT INTO blogdata VALUES (?,?,?,?)''', (session["username"], str(editID), request.args["title"], request.args["body"]))
+        print(c.fetchall())
+    return redirect("/MyBlogs")
 
 
 
