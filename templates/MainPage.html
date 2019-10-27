@@ -5,4 +5,18 @@
     <form action = "/Profile">
       <input type="submit" value="Profile">
     </form>
+    <table style="width:100%">
+      <tr>
+        <th>Author</th>
+        <th>Title</th>
+        <th>Contents</th>
+      </tr>
+    {% for i in smth %}
+    <tr>
+      <td>{{i[0]}}</td>
+      <td>{{i[1]}}</td>
+      <td>{{i[2]}}</td>
+    </tr>
+    {% endfor %}
+    </table>
 {% endblock %}
