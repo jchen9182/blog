@@ -36,10 +36,13 @@ loggedin = False
 
 @app.route("/", methods=['GET', 'POST'])
 def Login():
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        c.execute("SELECT * FROM userdata")
+        valid = c.fetchall()
     if("username" in session and "password" in session):
-        user = session['username']
-        pas = session['password']
-        c.execute()
+        if (session["username"], session["password"]) in valid:
+            return redirect("/Main")
     return render_template("LoginPage.html")
 
 ##check if the user entered a valid combo of username and passwor
@@ -50,13 +53,21 @@ def helper():
         c.execute("SELECT * FROM userdata")
         valid = c.fetchall()
         if (request.args["username"], request.args["password"]) in valid:
+            session["username"] = request.args["username"]
+            session["password"] = request.args["password"]
+            return redirect("/Main")
+        if (session["username"], session["password"]) in valid:
             return redirect("/Main")
         return redirect("/")
 
 
 @app.route("/Main")
 def Main():
-	return render_template("MainPage.html")
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        c.execute("SELECT * FROM blogdata")
+        allblogs = c.fetchall()
+        return render_template("MainPage.html",smth = allblogs)
 
 @app.route("/Register", methods=['GET', 'POST'])
 def Register():
@@ -111,8 +122,11 @@ def Registered():
         #so the following will help show that
         global passer
         passer += 1
+<<<<<<< HEAD
 
 >>>>>>> 1648acc2dac7e9ec7d8ae2ead555831d0926abe9
+=======
+>>>>>>> a14b475726eb4cab3e663075d03b6114a83b4edc
         return redirect("/Register")
 
 
@@ -128,7 +142,7 @@ def CreateBlog():
 
 @app.route("/MyBlogs")
 def MyBlogs():
-	return render_template("MyBlogsPage.html")
+	    return render_template("MyBlogsPage.html")
 
 
 command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string
