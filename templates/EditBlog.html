@@ -3,10 +3,10 @@
 {% block body %}
 <h1> Blog Page </h1>
 {% if b %}
-<h2> Title : {{b[2]}} </h2>
-<p> {{b[3]}} </p>
+<h2> Title : {{title}} </h2>
+<p> {{body}} </p>
 {% endif %}
-<form action = "/EditBlog">
-  <input type="submit" value="Edit Blog">
+<form action = "/MyBlogs">
+  <input type="submit" value="Done">
 </form>
 {% endblock %}
