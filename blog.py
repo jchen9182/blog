@@ -54,9 +54,6 @@ def Login():
     #     c = db.cursor()
     #     c.execute("SELECT * FROM userdata")
     #     valid = c.fetchall()
-    # if("username" in session and "password" in session):
-    #     if (session["username"], session["password"]) in valid:
-    #         return redirect("/Main")
     return rend_temp("LoginPage.html", message)
 
 ##check if the user entered a valid combo of username and passwor
@@ -164,6 +161,12 @@ def CreateBlog():
 def cbHelper():
     global message
     if (len(request.args) == 0): return redirect(lastRoute)
+    if(len(request.args["title"]) == 0):
+        message = "Title field can't be empty!"
+        return rend_temp("CreateBlogPage.html",message)
+    if(len(request.args["body"].rstrip()) == 0):
+        message = "Body has no text!"
+        return rend_temp("CreateBlogPage.html",message)
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         rows = c.execute('SELECT COUNT(*) FROM blogdata').fetchone()[0]

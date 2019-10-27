@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block title %} Create Blog {% endblock %}
 {% block body %}
+{% if m %}
+<h5>&#9888; {{m}}</h5>
+{% endif %}
 <h1> Create Blog Page </h1>
     <form action = "/createHelper">
       Blog Title:<br>
