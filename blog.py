@@ -113,39 +113,35 @@ def Blog():
 @app.route("/registerHelper", methods= ['GET', 'POST'])
 def Registered():
     global message
+    #this is the message to make sure it tells you whats wrtong
     if (len(request.args) == 0): return redirect(lastRoute)
+    #makes sure your password is actually there
     with sqlite3.connect(DB_FILE) as db:
+    #initialize the SLIQTE database
         if (len(request.args["username"]) > 0):
             c = db.cursor()
+            #makses sure that there actually is a database there
             if (len(request.args["password"]) == 0):
                 message = "Password is empty."
                 return redirect("/Register")
+
             if (request.args["password"] == request.args["repeat"]):
+                #makes sure the passwrds are the same
                 c.execute('SELECT * FROM userdata WHERE user = (?)', (request.args["username"],))
                 if (len(c.fetchall()) > 0) :
+                    #if theres already an account with that username, makes u redo
                     message = "Username already exists."
                     return redirect("/Register")
                 c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
                 message = "Account Created!"
+                #Yay!
                 return redirect("/")
             else:
                 message = "Passwords do not match."
                 return redirect("/Register")
         message = "Username not filled out."
         return redirect("/Register")
-        # c = db.cursor()
-        # if (request.args["password"] == request.args["repeat"]):
-        #     #first, if u repeat ur passwoard
-        #     if type(c.fetchone()) is None:
-        #         #(if there are no accounts itll make a table)
-        #         c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
-        #     #otherwise itll add ur username and password to the database for you to login
-        #     c.execute('INSERT INTO userdata VALUES (?, ?)',(request.args["username"], request.args["password"]))
-        #     return redirect("/")
-        #     #then you go back to the login page
-        # #if you didnt return, that means you didnt have equal passwords
-        # #so the following will help show that
-        # return redirect("/Register")
+
 
 @app.route("/Profile")
 def Profile():
