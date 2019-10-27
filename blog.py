@@ -130,7 +130,6 @@ def Registered():
             if (len(request.args["password"]) == 0):
                 message = "Password is empty."
                 return redirect("/Register")
-
             if (request.args["password"] == request.args["repeat"]):
                 #makes sure the passwrds are the same
                 c.execute('SELECT * FROM userdata WHERE user = (?)', (request.args["username"],))
