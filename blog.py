@@ -25,9 +25,13 @@ if c.fetchone()[0] < 1:
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
+#some helpful global variables
 message = ""
 loggedin = False
 lastRoute = "/"
+editor = ""
+title = ""
+editID = -1
 
 def rend_temp(template, mess):
     global message
@@ -186,7 +190,13 @@ def MyBlogs():
 
 @app.route("/EditBlog")
 def edit():
-    return
+    global lastRoute
+    with sqlite3.connect("info.db") as db:
+        c = db.cursor()
+        c.execute('''SELECT * FROM blogdata WHERE user = (?) AND blogid = (?)''', (session["username"], editID))
+        print(c.fetchall())
+
+
 
 @app.route("/auth2")
 def something6():
@@ -196,13 +206,6 @@ def something6():
     # go back to login screen
     return redirect("/")
 
-command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string
-c.execute(command)
-#print(555555555555555555554444444444)
-print(c.fetchall())
-#print(44444444445555555555555)
-db.commit()
-db.close()
 
 if __name__ == "__main__":
 	app.debug = True
