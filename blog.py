@@ -112,7 +112,7 @@ def Blog():
         c.execute("SELECT * FROM blogdata WHERE blogid = (?)", (request.args["id"],))
         blog = c.fetchone()
         #rendering the blog
-        return render_template("BlogPage.html", b = blog)
+        return render_template("BlogPage.html", b = blog, u = session["username"])
 
 ##Below is a checker
 ##If you register, it checs the following
@@ -211,23 +211,18 @@ def edit():
         #title abnd body in the fetchal
     return render_template("EditBlog.html", title = Title, body = Body)
 
-
-
 @app.route("/EditHelper")
 def update():
     global editID
     if (editID < 0): return redirect(lastRoute)
+    if (len(request.args) == 0): return redirect(lastRoute)
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', str(editID))
         #print(c.fetchall())
         c.execute('''INSERT INTO blogdata VALUES (?,?,?,?)''', (session["username"], str(editID), request.args["title"], request.args["body"]))
-        #
         #print(c.fetchall())
     return redirect("/MyBlogs")
-
-
-
 
 @app.route("/auth2")
 def something6():
@@ -236,7 +231,6 @@ def something6():
     session.pop('password')
     # go back to login screen
     return redirect("/")
-
 
 if __name__ == "__main__":
 	app.debug = True
