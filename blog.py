@@ -44,6 +44,7 @@ def Login():
     global loggedin
     loggedin = False
     lastRoute = "/"
+
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         c.execute("SELECT * FROM userdata")
@@ -52,10 +53,7 @@ def Login():
             if (session["username"], session["password"]) in valid:
                 loggedin = True
                 return redirect("/Main")
-    # with sqlite3.connect("info.db") as db:
-    #     c = db.cursor()
-    #     c.execute("SELECT * FROM userdata")
-    #     valid = c.fetchall()
+                #check if the credentials are in our userdatabase, if so they log in
     return rend_temp("LoginPage.html", message)
 
 ##check if the user entered a valid combo of username and passwor
@@ -89,6 +87,7 @@ def Main():
         c.execute("SELECT * FROM blogdata")
         allblogs = c.fetchall()
         url = {}
+        #looking at all the blogs
         for entry in allblogs:
             url[entry[1]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[1])
         return render_template("MainPage.html", smth = allblogs, u = url)
@@ -105,12 +104,14 @@ def Blog():
     global editID
     if (not loggedin): return redirect(lastRoute)
     lastRoute = "/Blog?id=" + request.args["id"]
+    #creates new url for each individual blog
     editID = int(request.args["id"])
-    print(editID)
+    #print(editID)
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         c.execute("SELECT * FROM blogdata WHERE blogid = (?)", (request.args["id"],))
         blog = c.fetchone()
+        #rendering the blog
         return render_template("BlogPage.html", b = blog)
 
 ##Below is a checker
@@ -156,6 +157,7 @@ def Profile():
 @app.route("/CreateBlog")
 def CreateBlog():
     if (not loggedin): return redirect(lastRoute)
+    #sed cbhelper
     return render_template("CreateBlogPage.html")
 
 @app.route("/createHelper")
@@ -168,14 +170,17 @@ def cbHelper():
     if(len(request.args["body"].rstrip()) == 0):
         message = "Body has no text!"
         return rend_temp("CreateBlogPage.html",message)
+        ##make sure the form entries are valid
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
+        #otherwise insert the new blog into the blog databaset
         rows = c.execute('SELECT COUNT(*) FROM blogdata').fetchone()[0]
         c.execute('''INSERT INTO blogdata VALUES (?, ?, ?, ?)''', (session["username"], rows, "" + request.args["title"], "" + request.args["body"]))
         return redirect("/Main")
 
 @app.route("/MyBlogs")
 def MyBlogs():
+    ##this has the same algorithm as the showing all blogs section, except it makes sure the user is the profile
     global lastRoute
     if (not loggedin): return redirect(lastRoute)
     lastRoute = "/MyBlogs"
@@ -194,17 +199,17 @@ def edit():
     global editID
     global lastRoute
     if (editID < 0): return redirect(lastRoute)
+    #makes sure ur actually on a blog
     with sqlite3.connect("info.db") as db:
+        #then it'll update the blog
         c = db.cursor()
-        print(11111111)
         gang = c.execute('''SELECT * FROM blogdata WHERE user = (?) and blogid = (?)''', (session["username"], str(editID)))
-        #print(111111111111)
         Title = ""
         Body = ""
         for theans in gang:
             Title = theans[2]
             Body = theans[3]
-        #data[3] is the actual body of the blog
+        #title abnd body in the fetchal
     return render_template("EditBlog.html", title = Title, body = Body)
 
 
@@ -216,9 +221,10 @@ def update():
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', str(editID))
-        print(c.fetchall())
+        #print(c.fetchall())
         c.execute('''INSERT INTO blogdata VALUES (?,?,?,?)''', (session["username"], str(editID), request.args["title"], request.args["body"]))
-        print(c.fetchall())
+        #
+        #print(c.fetchall())
     return redirect("/MyBlogs")
 
 
