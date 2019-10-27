@@ -188,6 +188,10 @@ def MyBlogs():
             url[entry[1]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[1])
         return render_template("MyBlogsPage.html", mb = myBlogs, u = url)
 
+@app.route("/EditBlog")
+def edit():
+    return
+
 @app.route("/auth2")
 def something6():
     # remove username and password from session
@@ -195,7 +199,6 @@ def something6():
     session.pop('password')
     # go back to login screen
     return redirect("/")
-
 
 command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string
 c.execute(command)
