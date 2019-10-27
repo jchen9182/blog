@@ -183,7 +183,11 @@ def MyBlogs():
         print(session["username"])
         c.execute('''SELECT * FROM blogdata WHERE user = (?)''', (session["username"],))
         myBlogs = c.fetchall()
-        return render_template("MyBlogsPage.html", mb = myBlogs)
+        url = {}
+        for entry in myBlogs:
+            url[entry[1]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[1])
+        return render_template("MyBlogsPage.html", mb = myBlogs, u = url)
+
 
 
 command = "SELECT * FROM userdata"          # test SQL stmt in sqlite3 shell, save as string

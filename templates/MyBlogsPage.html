@@ -15,7 +15,10 @@
   </tr>
   {% for i in mb %}
   <tr>
-    <td>{{i[2]}}</td>
+    <td>
+      <a href={{u[i[1]]}}>
+      {{i[2]}} </a>
+    </td>
     <td>{{i[0]}}</td>
   </tr>
   {% endfor %}
