@@ -42,6 +42,14 @@ def Login():
     global loggedin
     loggedin = False
     lastRoute = "/"
+    with sqlite3.connect(DB_FILE) as db:
+        c = db.cursor()
+        c.execute("SELECT * FROM userdata")
+        valid = c.fetchall()
+        if("username" in session and "password" in session):
+            if (session["username"], session["password"]) in valid:
+                loggedin = True
+                return redirect("/Main")
     # with sqlite3.connect("info.db") as db:
     #     c = db.cursor()
     #     c.execute("SELECT * FROM userdata")
