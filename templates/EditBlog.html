@@ -1,12 +1,20 @@
 {% extends "base.html" %}
-{% block title %} Main Page {% endblock %}
+{% block title %} Create Blog {% endblock %}
 {% block body %}
-<h1> Blog Page </h1>
-{% if b %}
-<h2> Title : {{title}} </h2>
-<p> {{body}} </p>
+{% if m %}
+<h5>&#9888; {{m}}</h5>
 {% endif %}
-<form action = "/MyBlogs">
-  <input type="submit" value="Done">
-</form>
+<h1> Create Blog Page </h1>
+    <form action = "/MyBlogs">
+      Blog Title:<br>
+      <input type="text" name="title" placeholder= {{title}} ><br>
+      Edit your body:<br>
+      <textarea
+	rows = "5"
+	cols = "60"
+	name = "body"
+  placeholder = {{body}}>
+      </textarea><br>
+      <input type="submit" value="Done">
+    </form>
 {% endblock %}

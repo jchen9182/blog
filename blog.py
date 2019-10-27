@@ -191,10 +191,11 @@ def MyBlogs():
 @app.route("/EditBlog")
 def edit():
     global lastRoute
-    with sqlite3.connect("info.db") as db:
-        c = db.cursor()
-        c.execute('''SELECT * FROM blogdata WHERE user = (?) AND blogid = (?)''', (session["username"], editID))
-        print(c.fetchall())
+    return render_template("EditBlog.html", title = "Temporary", body = "Tester")
+    # with sqlite3.connect("info.db") as db:
+    #     c = db.cursor()
+    #     c.execute('''SELECT * FROM blogdata WHERE user = (?) AND blogid = (?)''', (session["username"], editID))
+    #     print(c.fetchall())
 
 
 
