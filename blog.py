@@ -184,6 +184,9 @@ def MyBlogs():
     lastRoute = "/MyBlogs"
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
+        if (len(request.args) > 0):
+            if 'delete' in request.args:
+                c.execute('''DELETE FROM blogdata WHERE user = (?) AND blogid = (?)''', (session["username"], str(editID)))
         c.execute('''SELECT * FROM blogdata WHERE user = (?)''', (session["username"],))
         myBlogs = c.fetchall()
         url = {}
