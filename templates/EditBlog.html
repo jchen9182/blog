@@ -2,9 +2,6 @@
 {% block title %} Edit Blog {% endblock %}
 {% block body %}
 {% if m %}
-
-
-
 <h5>&#9888; {{m}}</h5>
 {% endif %}
 <h1> Edit Blog </h1>
@@ -19,5 +16,11 @@
   >{{body}}
       </textarea><br>
       <input type="submit" value="Done">
+    </form>
+    <form action = "/MyBlogs">
+      <input type="submit" value="View My Blogs">
+    </form>
+    <form action = "/Main">
+      <input type="submit" value="Home">
     </form>
 {% endblock %}

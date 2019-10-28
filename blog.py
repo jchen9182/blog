@@ -44,7 +44,6 @@ def Login():
     global loggedin
     loggedin = False
     lastRoute = "/"
-
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         c.execute("SELECT * FROM userdata")
@@ -185,7 +184,6 @@ def MyBlogs():
     lastRoute = "/MyBlogs"
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
-        print(session["username"])
         c.execute('''SELECT * FROM blogdata WHERE user = (?)''', (session["username"],))
         myBlogs = c.fetchall()
         url = {}
@@ -197,6 +195,9 @@ def MyBlogs():
 def edit():
     global editID
     global lastRoute
+    global message
+    if (not loggedin): return redirect(lastRoute)
+    lastRoute = "/EditBlog"
     if (editID < 0): return redirect(lastRoute)
     #makes sure ur actually on a blog
     with sqlite3.connect("info.db") as db:
@@ -208,14 +209,25 @@ def edit():
         for theans in gang:
             Title = theans[2]
             Body = theans[3]
-        #title abnd body in the fetchal
-    return render_template("EditBlog.html", title = Title, body = Body)
+        #title abnd body in the fetchall
+    temp = message
+    if (message != ""):
+        message = ""
+    return render_template("EditBlog.html", title = Title, body = Body, m = temp)
 
 @app.route("/EditHelper")
 def update():
     global editID
+    global message
     if (editID < 0): return redirect(lastRoute)
     if (len(request.args) == 0): return redirect(lastRoute)
+    if(len(request.args["title"]) == 0):
+        message = "Title field can't be empty!"
+        return redirect(lastRoute)
+    if(len(request.args["body"].rstrip()) == 0):
+        message = "Body has no text!"
+        return redirect(lastRoute)
+        ##make sure the form entries are valid
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', str(editID))
@@ -226,6 +238,7 @@ def update():
 
 @app.route("/auth2")
 def something6():
+    if (len(request.args) == 0): return redirect(lastRoute)
     # remove username and password from session
     session.pop('username')
     session.pop('password')
