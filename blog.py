@@ -242,7 +242,7 @@ def update():
         ##make sure the form entries are valid
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
-        c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', str(editID))
+        c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', (str(editID),))
         #print(c.fetchall())
         c.execute('''INSERT INTO blogdata VALUES (?,?,?,?)''', (str(editID), session["username"], request.args["title"], request.args["body"]))
         #print(c.fetchall())
