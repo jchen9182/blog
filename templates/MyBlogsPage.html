@@ -2,6 +2,9 @@
 {% block title %} My Blog Page {% endblock %}
 {% block body %}
 <h1> My Blogs Page </h1>
+{% if m %}
+<p>&#9888; {{m}} </p>
+{% endif %}
 <form action = "/Main">
   <input type="submit" value="Home">
 </form>

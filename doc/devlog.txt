@@ -136,3 +136,8 @@ chuC -- 2019-10-27 23:10
 Added option to delete account (END PRODUCT???!?!?!)
 
 -------------------------------------------------------------------------------
+
+chuC -- 2019-10-28 14:41
+Added confirmation messages for creating blog post and deleting account
+
+-------------------------------------------------------------------------------

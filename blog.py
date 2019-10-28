@@ -79,6 +79,7 @@ def helper():
 @app.route("/Main")
 def Main():
     global lastRoute
+    global message
     if (not loggedin): return redirect(lastRoute)
     lastRoute = "/Main"
     with sqlite3.connect(DB_FILE) as db:
@@ -89,7 +90,10 @@ def Main():
         #looking at all the blogs
         for entry in allblogs:
             url[entry[0]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[0])
-        return render_template("MainPage.html", smth = allblogs, u = url)
+        temp = message
+        if (message != ""):
+            message = ""
+        return render_template("MainPage.html", smth = allblogs, u = url, m = temp)
 
 @app.route("/Register", methods=['GET', 'POST'])
 def Register():
@@ -168,6 +172,7 @@ def cbHelper():
         message = "Body has no text!"
         return redirect("/CreateBlog")
         ##make sure the form entries are valid
+    message = "Blog post sucessfully created!"
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         #otherwise insert the new blog into the blog databaset
@@ -178,19 +183,25 @@ def cbHelper():
 def MyBlogs():
     ##this has the same algorithm as the showing all blogs section, except it makes sure the user is the profile
     global lastRoute
+    global message
     if (not loggedin): return redirect(lastRoute)
     lastRoute = "/MyBlogs"
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         if (len(request.args) > 0):
             if 'delete' in request.args:
+                message = "Blog post successfully deleted!"
                 c.execute('''DELETE FROM blogdata WHERE user = (?) AND blogid = (?)''', (session["username"], str(editID)))
+                return redirect("/MyBlogs")
         c.execute('''SELECT * FROM blogdata WHERE user = (?)''', (session["username"],))
         myBlogs = c.fetchall()
         url = {}
         for entry in myBlogs:
             url[entry[0]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[0])
-        return render_template("MyBlogsPage.html", mb = myBlogs, u = url)
+        temp = message
+        if (message != ""):
+            message = ""
+        return render_template("MyBlogsPage.html", mb = myBlogs, u = url, m = temp)
 
 @app.route("/EditBlog", methods = ["GET"])
 def edit():
@@ -239,8 +250,10 @@ def update():
 
 @app.route("/auth2")
 def something6():
+    global message
     if (len(request.args) == 0): return redirect(lastRoute)
     if 'delete' in request.args:
+        message = "Account successfully deleted!"
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute('''UPDATE blogdata SET user = REPLACE(user, user, '[DELETED]') WHERE user = (?)''', (session["username"],))
