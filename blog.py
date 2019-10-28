@@ -81,14 +81,13 @@ def Main():
     global lastRoute
     if (not loggedin): return redirect(lastRoute)
     lastRoute = "/Main"
-    with sqlite3.connect("info.db") as db:
+    with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         c.execute("SELECT * FROM blogdata")
         allblogs = c.fetchall()
         url = {}
         #looking at all the blogs
         for entry in allblogs:
-            print(entry[0])
             url[entry[0]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[0])
         return render_template("MainPage.html", smth = allblogs, u = url)
 
@@ -106,7 +105,7 @@ def Blog():
     lastRoute = "/Blog?id=" + request.args["id"]
     #creates new url for each individual blog
     editID = int(request.args["id"])
-    with sqlite3.connect("info.db") as db:
+    with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         c.execute("SELECT * FROM blogdata WHERE blogid = (?)", (request.args["id"],))
         blog = c.fetchone()
@@ -181,7 +180,7 @@ def MyBlogs():
     global lastRoute
     if (not loggedin): return redirect(lastRoute)
     lastRoute = "/MyBlogs"
-    with sqlite3.connect("info.db") as db:
+    with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         if (len(request.args) > 0):
             if 'delete' in request.args:
@@ -202,7 +201,7 @@ def edit():
     lastRoute = "/EditBlog"
     if (editID < 0): return redirect(lastRoute)
     #makes sure ur actually on a blog
-    with sqlite3.connect("info.db") as db:
+    with sqlite3.connect(DB_FILE) as db:
         #then it'll update the blog
         c = db.cursor()
         gang = c.execute('''SELECT * FROM blogdata WHERE user = (?) and blogid = (?)''', (session["username"], str(editID)))
@@ -230,7 +229,7 @@ def update():
         message = "Body has no text!"
         return redirect(lastRoute)
         ##make sure the form entries are valid
-    with sqlite3.connect("info.db") as db:
+    with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', str(editID))
         #print(c.fetchall())
@@ -241,6 +240,11 @@ def update():
 @app.route("/auth2")
 def something6():
     if (len(request.args) == 0): return redirect(lastRoute)
+    if 'delete' in request.args:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+            c.execute('''UPDATE blogdata SET user = REPLACE(user, user, '[DELETED]') WHERE user = (?)''', (session["username"],))
+            c.execute('''DELETE FROM userdata WHERE user = (?)''', (session["username"],))
     # remove username and password from session
     session.pop('username')
     session.pop('password')
@@ -250,3 +254,6 @@ def something6():
 if __name__ == "__main__":
 	app.debug = True
 	app.run()
+
+db.commit()
+db.close()
