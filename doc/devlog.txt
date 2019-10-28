@@ -62,11 +62,52 @@ Made the password form catch errors with not entering or having unequal password
 
 -------------------------------------------------------------------------------
 
+chuC -- 2019-10-26 00:14
+Reworked registration error handling and message printing, added a back button from register to login
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-26 03:08
+fixed some login problems, implemented a bypass catcher, worked on database adding/displaying, connected createblog with database, started hyperlinks for blog posts on main page
+
+-------------------------------------------------------------------------------
+
 rizzoJ -- 2019-10-27 12:09
 Created a new html file for editing existing blogs
 
 -------------------------------------------------------------------------------
+
 rizzoJ -- 2019-10-27 4:49
 Editing blogs is fully functional in the database, functionality of the web app is finished
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-27 19:11
+Fixed minor error with string concat in the title of edit blog
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-27 20:19
+Made it so that users cannot edit other users' blogs and only their own
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-27 21:05
+Added edit blog error handling
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-27 22:15
+Added delete blog post option
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-27 22:47
+Fixed error with generating unique blog ids
+
+-------------------------------------------------------------------------------
+
+chuC -- 2019-10-27 23:10
+Added option to delete account (END PRODUCT???!?!?!)
 
 -------------------------------------------------------------------------------
