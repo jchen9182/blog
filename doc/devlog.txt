@@ -72,6 +72,31 @@ fixed some login problems, implemented a bypass catcher, worked on database addi
 
 -------------------------------------------------------------------------------
 
+leungD -- 2019-10-27 08:30
+Fixed auto redirect in route /
+
+-------------------------------------------------------------------------------
+
+leungD -- 2019-10-27 09:00
+Added error handling for empty blogs
+
+-------------------------------------------------------------------------------
+
+leungD -- 2019-10-27 09:15
+Added hyperlinks to myblog page
+
+-------------------------------------------------------------------------------
+
+leungD -- 2019-10-27 09:30
+Added logout button to profile page
+
+-------------------------------------------------------------------------------
+
+leungD -- 2019-10-27 09:45
+Started work on editing existing blog (added route and button)
+
+-------------------------------------------------------------------------------
+
 rizzoJ -- 2019-10-27 12:09
 Created a new html file for editing existing blogs
 
