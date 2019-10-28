@@ -18,7 +18,7 @@ if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE userdata (user TEXT, pass TEXT);")
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='blogdata' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE blogdata(user TEXT, blogid INT, title TEXT,content BLOB);")
+    c.execute("CREATE TABLE blogdata(blogid INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, title TEXT,content BLOB);")
 
 #-----------------------------------------------------------------
 #FLASK APP
@@ -88,7 +88,8 @@ def Main():
         url = {}
         #looking at all the blogs
         for entry in allblogs:
-            url[entry[1]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[1])
+            print(entry[0])
+            url[entry[0]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[0])
         return render_template("MainPage.html", smth = allblogs, u = url)
 
 @app.route("/Register", methods=['GET', 'POST'])
@@ -105,7 +106,6 @@ def Blog():
     lastRoute = "/Blog?id=" + request.args["id"]
     #creates new url for each individual blog
     editID = int(request.args["id"])
-    #print(editID)
     with sqlite3.connect("info.db") as db:
         c = db.cursor()
         c.execute("SELECT * FROM blogdata WHERE blogid = (?)", (request.args["id"],))
@@ -156,7 +156,7 @@ def Profile():
 def CreateBlog():
     if (not loggedin): return redirect(lastRoute)
     #sed cbhelper
-    return render_template("CreateBlogPage.html")
+    return rend_temp("CreateBlogPage.html", message)
 
 @app.route("/createHelper")
 def cbHelper():
@@ -164,16 +164,15 @@ def cbHelper():
     if (len(request.args) == 0): return redirect(lastRoute)
     if(len(request.args["title"]) == 0):
         message = "Title field can't be empty!"
-        return rend_temp("CreateBlogPage.html",message)
+        return redirect("/CreateBlog")
     if(len(request.args["body"].rstrip()) == 0):
         message = "Body has no text!"
-        return rend_temp("CreateBlogPage.html",message)
+        return redirect("/CreateBlog")
         ##make sure the form entries are valid
     with sqlite3.connect(DB_FILE) as db:
         c = db.cursor()
         #otherwise insert the new blog into the blog databaset
-        rows = c.execute('SELECT COUNT(*) FROM blogdata').fetchone()[0]
-        c.execute('''INSERT INTO blogdata VALUES (?, ?, ?, ?)''', (session["username"], rows, "" + request.args["title"], "" + request.args["body"]))
+        c.execute('''INSERT INTO blogdata VALUES (?, ?, ?, ?)''', (None, session["username"], "" + request.args["title"], "" + request.args["body"]))
         return redirect("/Main")
 
 @app.route("/MyBlogs")
@@ -191,7 +190,7 @@ def MyBlogs():
         myBlogs = c.fetchall()
         url = {}
         for entry in myBlogs:
-            url[entry[1]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[1])
+            url[entry[0]] = "http://127.0.0.1:5000/Blog?id=" + str(entry[0])
         return render_template("MyBlogsPage.html", mb = myBlogs, u = url)
 
 @app.route("/EditBlog", methods = ["GET"])
@@ -235,7 +234,7 @@ def update():
         c = db.cursor()
         c.execute('''DELETE FROM blogdata WHERE blogid = (?)''', str(editID))
         #print(c.fetchall())
-        c.execute('''INSERT INTO blogdata VALUES (?,?,?,?)''', (session["username"], str(editID), request.args["title"], request.args["body"]))
+        c.execute('''INSERT INTO blogdata VALUES (?,?,?,?)''', (str(editID), session["username"], request.args["title"], request.args["body"]))
         #print(c.fetchall())
     return redirect("/MyBlogs")
 

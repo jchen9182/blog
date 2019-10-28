@@ -6,7 +6,7 @@
       <input type="submit" value="Profile">
     </form>
     <form action = "/auth2">
-      <input type="submit" value="Log Out">
+      <input type="submit" name="logout" value="Log Out">
     </form>
     <table style="width:50%" border="1">
       <tr>
@@ -16,10 +16,10 @@
     {% for i in smth %}
     <tr>
       <td>
-        <a href={{u[i[1]]}}>
+        <a href={{u[i[0]]}}>
         {{i[2]}} </a>
       </td>
-      <td>{{i[0]}}</td>
+      <td>{{i[1]}}</td>
     </tr>
     {% endfor %}
     </table>
