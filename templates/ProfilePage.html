@@ -4,15 +4,18 @@
 <h1> Profile Page </h1>
   <p><b>Username: </b>{{user}}</p>
   <form action = "/CreateBlog">
-    <input type="submit" value="Create New Blog">
+    <input class = "button" type="submit" value="Create New Blog">
   </form>
+  <br>
   <form action = "/MyBlogs">
-    <input type="submit" value="View My Blogs">
+    <input class = "button" type="submit" value="View My Blogs">
   </form>
+  <br>
   <form action = "/Main">
-    <input type="submit" value="Home">
+    <input class = "button" type="submit" value="Home">
   </form>
+  <br>
   <form action = "/auth2">
-    <input type="submit" name ="delete" value="Delete My Account" onclick="return confirm('Are you sure you want to delete your account?');">
+    <input class = "button" type="submit" name ="delete" value="Delete My Account" onclick="return confirm('Are you sure you want to delete your account?');">
   </form>
 {% endblock %}

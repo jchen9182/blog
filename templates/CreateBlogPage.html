@@ -7,16 +7,17 @@
 <h1> Create Blog Page </h1>
     <form action = "/createHelper">
       Blog Title:<br>
-      <input type="text" name="title"><br>
+      <input class = "input" type="text" name="title"><br>
       Write Your Blog Below:<br>
-      <textarea
+      <textarea class = "input"
 	rows = "5"
 	cols = "60"
 	name = "body">
-      </textarea><br>
-      <input type="submit" value="Done">
+      </textarea><br><br>
+      <input class = "button" type="submit" value="Done">
     </form>
+    <br>
     <form action = "/Profile">
-      <input type="submit" value="Back">
+      <input class = "button" type="submit" value="Back">
     </form>
 {% endblock %}

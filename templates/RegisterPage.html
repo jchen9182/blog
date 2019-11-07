@@ -8,15 +8,16 @@
 {% endif %}
   <form action = "/registerHelper" method = "GET">
     Username:<br>
-    <input type="text" name="username"><br>
+    <input class = "input" type="text" name="username"><br>
     Password:<br>
-    <input type="password" name="password"><br>
+    <input class = "input" type="password" name="password"><br>
     Repeat Password:<br>
-    <input type="password" name="repeat"><br>
+    <input class = "input" type="password" name="repeat"><br><br>
 
-    <input type="submit" value="Create Account">
+    <input class = "button" type="submit" value="Create Account">
   </form>
+  <br>
   <form action = "/">
-    <input type="submit" value = "Back to Login Page">
+    <input class = "button" type="submit" value = "Back to Login Page">
   </form>
 {% endblock %}

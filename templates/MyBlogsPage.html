@@ -6,11 +6,13 @@
 <p>&#9888; {{m}} </p>
 {% endif %}
 <form action = "/Main">
-  <input type="submit" value="Home">
+  <input class = "button"type="submit" value="Home">
 </form>
+<br>
 <form action = "/Profile">
-  <input type="submit" value="Back">
+  <input class = "button"type="submit" value="Back">
 </form>
+<br>
 <table style="width:50%" border="1">
   <tr>
     <th>Title</th>
@@ -19,7 +21,7 @@
   {% for i in mb %}
   <tr>
     <td>
-      <a href={{u[i[0]]}}>
+      <a id = "tableText" href={{u[i[0]]}}>
       {{i[2]}} </a>
     </td>
     <td>{{i[1]}}</td>
